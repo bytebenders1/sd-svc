@@ -17,7 +17,9 @@ export const CLIENT = axios.create({
 CLIENT.interceptors.request.use(async (config: AxiosRequestConfig) => {
   if (typeof window === "undefined") return;
   const localStoreString = localStorage.getItem(STORAGE_KEY + "_details");
-  if (!localStoreString) return config;
+  if (localStoreString === undefined || localStoreString === null)
+    return config;
+
   const localStore = JSON.parse(localStoreString);
 
   const accessToken = localStore;

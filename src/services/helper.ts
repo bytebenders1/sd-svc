@@ -1,10 +1,10 @@
 import { AxiosError } from "axios";
 
-export function handleRequestError(error: any): never {
+export function handleRequestError(error: any) {
   if (error.response && error.response.data) {
     const axiosError = error as AxiosError;
     throw axiosError.response?.data;
   } else {
-    throw new Error("An error occurred.");
+    // throw new Error("An error occurred.");
   }
 }

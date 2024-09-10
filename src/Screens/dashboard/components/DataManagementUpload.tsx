@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@/src/components/ui/button";
-import { Progress } from "@/src/components/ui/progress";
 import { file, getKB, getMB, uploadedFileObj } from "@/src/lib/types/constant";
 import { uploadedFile } from "@/src/lib/types/dashboard.types";
 import { Trash } from "iconsax-react";
@@ -31,8 +30,8 @@ function DataManagementUpload() {
   const {
     mutateAsync: storeOnBlockAsync,
     isPending: blocking,
-    isError: isBlockError,
-    error: blockError,
+    // isError: isBlockError,
+    // error: blockError,
   } = useStoreOnBlockchainMutation();
 
   // Initialize Web3 in useEffect to ensure it only runs on the client side
@@ -80,81 +79,76 @@ function DataManagementUpload() {
     };
   }, []);
 
-  async function connectWallet() {
-    try {
-      if (typeof window.ethereum !== "undefined") {
-        const accounts = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        });
-        return accounts[0];
-      }
-    } catch (error) {
-      console.error("User denied account access", error);
-      throw error;
-    }
-  }
+  // async function connectWallet() {
+  //   try {
+  //     if (typeof window.ethereum !== "undefined") {
+  //       const accounts = await window.ethereum.request({
+  //         method: "eth_requestAccounts",
+  //       });
+  //       return accounts[0];
+  //     }
+  //   } catch (error) {
+  //     console.error("User denied account access", error);
+  //     throw error;
+  //   }
+  // }
 
-  const connectWallet2 = async () => {
-    if (!web3) {
-      console.error("Web3 is not initialized");
-      return;
-    }
+  // const connectWallet2 = async () => {
+  //   if (!web3) {
+  //     console.error("Web3 is not initialized");
+  //     return;
+  //   }
 
-    try {
-      const accounts = await window.ethereum.request({
-        method: "eth_requestAccounts",
-      });
-      setAccount(accounts[0]);
-    } catch (error) {
-      console.error("Failed to connect wallet", error);
-    }
-  };
+  //   try {
+  //     const accounts = await window.ethereum.request({
+  //       method: "eth_requestAccounts",
+  //     });
+  //     setAccount(accounts[0]);
+  //   } catch (error) {
+  //     console.error("Failed to connect wallet", error);
+  //   }
+  // };
 
-  const signAndSubmitTransaction = async (
-    contractAddress: string,
-    contractAbi: any,
-    methodName: string,
-    args: any[]
-  ): Promise<any> => {
-    if (!web3) throw new Error("Web3 is not initialized");
-    if (!account) throw new Error("No account connected");
+  // const signAndSubmitTransaction = async (
+  //   contractAddress: string,
+  //   contractAbi: any,
+  //   methodName: string,
+  //   args: any[]
+  // ): Promise<any> => {
+  //   if (!web3) throw new Error("Web3 is not initialized");
+  //   if (!account) throw new Error("No account connected");
 
-    try {
-      const contract = new web3.eth.Contract(contractAbi, contractAddress);
-      const data = contract.methods[methodName](...args).encodeABI();
+  //   try {
+  //     const contract = new web3.eth.Contract(contractAbi, contractAddress);
+  //     const data = contract.methods[methodName](...args).encodeABI();
 
-      const gasLimit = await web3.eth.estimateGas({
-        from: account,
-        to: contractAddress,
-        data: data,
-      });
+  //     const gasLimit = await web3.eth.estimateGas({
+  //       from: account,
+  //       to: contractAddress,
+  //       data: data,
+  //     });
 
-      const tx = {
-        from: account,
-        to: contractAddress,
-        data,
-        gas: gasLimit,
-      };
+  //     const tx = {
+  //       from: account,
+  //       to: contractAddress,
+  //       data,
+  //       gas: gasLimit,
+  //     };
 
-      const req = await window.ethereum.request({
-        method: "eth_requestAccounts",
-      });
-      await storeOnBlockAsync({ signedTx: req[0] });
+  //     const req = await window.ethereum.request({
+  //       method: "eth_requestAccounts",
+  //     });
+  //     await storeOnBlockAsync({ signedTx: req[0] });
 
-      return req[0];
-    } catch (error) {
-      console.error("Error signing or submitting transaction:", error);
-      throw error;
-    }
-  };
+  //     return req[0];
+  //   } catch (error) {
+  //     console.error("Error signing or submitting transaction:", error);
+  //     throw error;
+  //   }
+  // };
   const { refetch, data, isFetching, isError, error, isLoading } =
     useGetSecret(isEnabled);
-  const {
-    mutateAsync,
-    isPending,
-    isError: isStoreError,
-    error: storeError,
-  } = useStoreDataMutation();
+  const { mutateAsync, isPending } = useStoreDataMutation();
 
   const [uploadedFiles, setUploadedFiles] = useState<uploadedFile[]>([]);
   const { getRootProps, getInputProps } = useDropzone({
@@ -165,7 +159,7 @@ function DataManagementUpload() {
         setUploadedFiles([...uploadedFiles, ...acceptedFiles]);
         if (res?.data) {
           const formData = new FormData();
-          formData.append("file", acceptedFiles[0]);
+          formData.append("file", file);
           formData.append("secretKey", res.data.secretKey);
           // @ts-ignore
           mutateAsync(formData).then((res) => {

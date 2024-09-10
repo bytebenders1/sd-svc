@@ -38,6 +38,7 @@ import {
   useGetUserDataHashes,
   useGetUserDetails,
 } from "@/src/hooks/userHook/useUser";
+import { toast } from "sonner";
 
 export type Payment = {
   id: string;
@@ -117,7 +118,10 @@ export const columns: ColumnDef<DataRecord>[] = [
     cell: ({ row }) => (
       <div
         className="text-sm text-secondary w-[150px] overflow-hidden cursor-pointer"
-        onClick={() => navigator.clipboard.writeText(row.getValue("filename"))}
+        onClick={() => {
+          navigator.clipboard.writeText(row.getValue("filename"));
+          toast.success(`Hash Copied`);
+        }}
       >
         {row.original.dataHash}
       </div>
@@ -130,9 +134,10 @@ export const columns: ColumnDef<DataRecord>[] = [
       return (
         <div
           className="text-sm text-secondary w-[150px] shrink-0 cursor-pointer overflow-hidden"
-          onClick={() =>
-            navigator.clipboard.writeText(row.original.encryptedSecret)
-          }
+          onClick={() => {
+            navigator.clipboard.writeText(row.original.encryptedSecret);
+            toast.success(`Encryption secret Copied`);
+          }}
         >
           {row.original.encryptedSecret}
         </div>

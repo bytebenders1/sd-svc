@@ -27,7 +27,7 @@ export const useSignInMutation = () => {
       return Service.AuthService.signIn(data);
     },
     onSuccess: (data, variables, context) => {
-      console.log("successful signup", data, variables, context);
+      console.log("successful signin", data, variables, context);
       toast.success("Logged in successfully");
       localStorage.setItem(
         `${STORAGE_KEY}_details`,
